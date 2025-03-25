@@ -1,0 +1,92 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="fragments.AllFragment">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/filter_card_height"
+        android:layout_marginLeft="@dimen/page_margin"
+        android:layout_marginTop="96dp"
+        android:layout_marginRight="@dimen/page_margin"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textView">
+
+        <TextView
+            android:id="@+id/filterOpsText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/page_margin"
+            android:layout_marginTop="@dimen/page_margin"
+            android:layout_marginEnd="@dimen/page_margin"
+            android:text="Filter operations (Lambda Functions)"
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/page_margin"
+            android:layout_marginTop="@dimen/little_margin"
+            android:layout_marginEnd="@dimen/page_margin"
+            android:layout_marginBottom="@dimen/little_margin"
+            app:layout_constraintTop_toBottomOf="@id/filterOpsText">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toBottomOf="@id/filterOpsText">
+
+                <Button
+                    android:id="@+id/btnShowAll"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/button_margin"
+                    android:layout_marginEnd="@dimen/button_margin"
+                    android:text="Show All" />
+
+                <Button
+                    android:id="@+id/btnSpain"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/button_margin"
+                    android:layout_marginEnd="@dimen/button_margin"
+                    android:text="Spain" />
+
+                <Button
+                    android:id="@+id/btnByCountry"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/button_margin"
+                    android:layout_marginEnd="@dimen/button_margin"
+                    android:text="By country" />
+
+                <Button
+                    android:id="@+id/btnByPoints"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/button_margin"
+                    android:layout_marginEnd="@dimen/button_margin"
+                    android:text="By points" />
+
+                <Button
+                    android:id="@+id/btnPlayers"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/button_margin"
+                    android:layout_marginEnd="@dimen/button_margin"
+                    android:text="By name (A-Z)" />
+            </LinearLayout>
+        </HorizontalScrollView>
+
+
+    </androidx.cardview.widget.CardView>
+
+</FrameLayout>
