@@ -1,4 +1,4 @@
-package com.example.soccer;
+package com.example.soccer.adapter;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -25,10 +25,8 @@ public class MyViewPagerAdapter extends FragmentStateAdapter {
                 return new PlayersFragment();
             case 2:
                 return new MatchesFragment();
-            case 3:
-                return new AllFragment();
             default:
-                return new TeamsFragment();
+                return new AllFragment();
         }
     }
 

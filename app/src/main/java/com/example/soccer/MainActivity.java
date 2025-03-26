@@ -4,12 +4,16 @@ import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.viewpager.widget.ViewPager;
 
+import com.example.soccer.adapter.MyViewPagerAdapter;
+import com.example.soccer.model.Match;
+import com.example.soccer.model.Player;
+import com.example.soccer.model.Team;
 import com.google.android.material.tabs.TabLayout;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,5 +29,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //connect variables to UI components
+
+
+        //get test data from a DataProvider object
+        DataProvider dataProvider = new DataProvider();
+        List<Team> teams = dataProvider.createSampleTeams();
+        List<Player> players = dataProvider.createSamplePlayers();
+        List<Match> matches = dataProvider.createSampleMatches();
     }
 }
