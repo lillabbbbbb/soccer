@@ -10,8 +10,8 @@ import fragments.MatchesFragment;
 import fragments.PlayersFragment;
 import fragments.TeamsFragment;
 
-public class MyViewPagerAdapter extends FragmentStateAdapter {
-    public MyViewPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
+public class PageAdapter extends FragmentStateAdapter {
+    public PageAdapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
     }
 
@@ -32,6 +32,6 @@ public class MyViewPagerAdapter extends FragmentStateAdapter {
 
     @Override
     public int getItemCount() {
-        return 0;
+        return 3;
     }
 }
