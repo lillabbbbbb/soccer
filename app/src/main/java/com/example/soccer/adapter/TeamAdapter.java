@@ -68,7 +68,7 @@ public class TeamAdapter extends RecyclerView.Adapter<TeamAdapter.ViewHolder> {
      * Update the adapter data
      * @param newTeams new list of teams
      */
-    public void updateItems(List<Team> newTeams) {
+    public void updateTeams(List<Team> newTeams) {
         teams.clear();
         teams.addAll(newTeams);
         notifyDataSetChanged();

@@ -48,14 +48,10 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
+            public void onTabUnselected(TabLayout.Tab tab) {}
 
             @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
+            public void onTabReselected(TabLayout.Tab tab) {}
         });
 
         viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
@@ -68,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         //set up sample data using DataProvider
+        DataProvider provider = new DataProvider();
+        provider.createSampleMatches();
 
         setupRecyclerView();
 
