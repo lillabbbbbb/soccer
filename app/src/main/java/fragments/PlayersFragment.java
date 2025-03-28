@@ -39,13 +39,13 @@ public class PlayersFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_players, container, false);
 
-        initViews();
+        initViews(view);
 
         setupPlayerRepository(setupData());
 
         setupRecyclerView();
 
-        setupButtonListeners();
+        setupButtonListeners(view);
 
         return view;
     }
@@ -53,11 +53,11 @@ public class PlayersFragment extends Fragment {
     /**
      * Initialize UI components
      */
-    private void initViews() {
-        tvEmptyView = tvEmptyView.findViewById(R.id.player_tv_empty_view);
-
-        filterView = getView().findViewById(R.id.player_card_filter_options);
-        iteratorView = getView().findViewById(R.id.player_card_iterator_demo);
+    private void initViews(View view) {
+        tvEmptyView = view.findViewById(R.id.player_tv_empty_view);
+        filterView = view.findViewById(R.id.player_card_filter_options);
+        iteratorView = view.findViewById(R.id.player_card_iterator_demo);
+        recyclerView = view.findViewById(R.id.player_recycler_view);
 
 
     }
@@ -103,12 +103,12 @@ public class PlayersFragment extends Fragment {
      * Set up click listeners for filter buttons
      * Demonstrates use of lambda functions and generics
      */
-    private void setupButtonListeners() {
+    private void setupButtonListeners(View view) {
         // Instantiate all buttons of this fragment
         Button btnFilterportugal, btnFilterFcBarcelona, btnFilterEngland, btnSortName, btnSortFounding, btnForeachIterator, btnCustomIterator;
 
         // Show all players
-        Button btnShowAll = getActivity().findViewById(R.id.player_btn_show_all);
+        Button btnShowAll = view.findViewById(R.id.player_btn_show_all);
         btnShowAll.setOnClickListener(v -> {
             // Lambda function for click handler
             updateAdapterItems(playerRepository.getAllItems());
@@ -116,7 +116,7 @@ public class PlayersFragment extends Fragment {
         });
 
         // Filter for Portugal only
-        btnFilterportugal = getActivity().findViewById(R.id.player_btn_filter_portugal);
+        btnFilterportugal = view.findViewById(R.id.player_btn_filter_portugal);
         btnFilterportugal.setOnClickListener(v -> {
 
             updateAdapterItems(playerRepository.filterByName("Portugal").getAllItems());
@@ -124,7 +124,7 @@ public class PlayersFragment extends Fragment {
         });
 
         // Filter for FC Barcelona only
-        btnFilterFcBarcelona = getActivity().findViewById(R.id.player_btn_filter_fc_barcelona);
+        btnFilterFcBarcelona = view.findViewById(R.id.player_btn_filter_fc_barcelona);
         btnFilterFcBarcelona.setOnClickListener(v -> {
             // Lambda predicate example
             updateAdapterItems(
@@ -134,7 +134,7 @@ public class PlayersFragment extends Fragment {
         });
 
         // Filter for tools only
-        btnFilterEngland = getActivity().findViewById(R.id.player_btn_filter_england);
+        btnFilterEngland = view.findViewById(R.id.player_btn_filter_england);
         btnFilterEngland.setOnClickListener(v -> {
             updateAdapterItems(
                     playerRepository.filterByCountry("England").getAllItems()
@@ -143,14 +143,14 @@ public class PlayersFragment extends Fragment {
         });
 
         // Sort by name (A-Z) (using lambda comparator)
-        btnSortName = getActivity().findViewById(R.id.player_btn_sort_name);
+        btnSortName = view.findViewById(R.id.player_btn_sort_name);
         btnSortName.setOnClickListener(v -> {
             List<Player> sortedPlayers = (List<Player>) playerRepository.sortByName();
             showToast("Sorted by Name (>A-Z)");
         });
 
         // Sort by age (Ascending) (using lambda comparator)
-        btnSortFounding = getActivity().findViewById(R.id.player_btn_sort_age);
+        btnSortFounding = view.findViewById(R.id.player_btn_sort_age);
         btnSortFounding.setOnClickListener(v -> {
             // Using stream with lambda comparator
             List<Player> sortedPlayers = (List<Player>) playerRepository.sortByAge();
@@ -160,7 +160,7 @@ public class PlayersFragment extends Fragment {
         });
 
         // Sort by team (A-Z) (using lambda comparator)
-        btnSortFounding = getActivity().findViewById(R.id.player_btn_sort_team);
+        btnSortFounding = view.findViewById(R.id.player_btn_sort_team);
         btnSortFounding.setOnClickListener(v -> {
             // Using stream with lambda comparator
             List<Player> sortedPlayers = (List<Player>) playerRepository.sortByTeam();
@@ -172,13 +172,13 @@ public class PlayersFragment extends Fragment {
 
 
         // Iterator demonstration - using for-each (which uses the Iterator interface)
-        btnForeachIterator = getView().findViewById(R.id.player_btn_foreach_iterator);
+        btnForeachIterator = view.findViewById(R.id.player_btn_foreach_iterator);
         btnForeachIterator.setOnClickListener(v -> {
             demonstrateForEachIterator();
         });
 
         // Iterator demonstration - using custom iterator
-        btnCustomIterator = getView().findViewById(R.id.player_btn_custom_iterator);
+        btnCustomIterator = view.findViewById(R.id.player_btn_custom_iterator);
         btnCustomIterator.setOnClickListener(v -> {
             demonstrateCustomIterator();
         });

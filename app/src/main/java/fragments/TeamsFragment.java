@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ import com.google.android.material.card.MaterialCardView;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -39,29 +41,29 @@ public class TeamsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_teams, container, false);
+        Log.d("TeamsFragment", "inflating view");
 
-        initViews();
+        initViews(view);
 
         setupTeamRepository(setupData());
 
         setupRecyclerView();
 
-        setupButtonListeners();
+        setupButtonListeners(view);
+        Log.d("TeamsFragment", "setting up button listeners");
 
         return view;
     }
 
-    /**
-     * Initialize UI components
-     */
-    private void initViews() {
-        tvEmptyView = tvEmptyView.findViewById(R.id.team_tv_empty_view);
-
-        filterView = getView().findViewById(R.id.team_card_filter_options);
-        iteratorView = getView().findViewById(R.id.team_card_iterator_demo);
-
+    public void initViews(View view){
+        //connect variables to UI components
+        tvEmptyView = view.findViewById(R.id.team_tv_empty_view);
+        filterView = view.findViewById(R.id.team_card_filter_options);
+        iteratorView = view.findViewById(R.id.team_card_iterator_demo);
+        recyclerView = view.findViewById(R.id.team_recycler_view);
     }
 
     /**
@@ -105,12 +107,12 @@ public class TeamsFragment extends Fragment {
      * Set up click listeners for filter buttons
      * Demonstrates use of lambda functions and generics
      */
-    private void setupButtonListeners() {
+    private void setupButtonListeners(View view) {
         // Instantiate all buttons of this fragment
         Button btnFilterLiverpool, btnFilterFcBarcelona, btnFilterEngland, btnSortName, btnSortFounding, btnForeachIterator, btnCustomIterator;
 
         // Show all teams
-        Button btnShowAll = getActivity().findViewById(R.id.team_btn_show_all);
+        Button btnShowAll = view.findViewById(R.id.team_btn_show_all);
         btnShowAll.setOnClickListener(v -> {
             // Lambda function for click handler
             updateAdapterItems(teamRepository.getAllItems());
@@ -118,7 +120,7 @@ public class TeamsFragment extends Fragment {
         });
 
         // Filter for Liverpool only
-        btnFilterLiverpool = getActivity().findViewById(R.id.team_btn_filter_liverpool);
+        btnFilterLiverpool = view.findViewById(R.id.team_btn_filter_liverpool);
         btnFilterLiverpool.setOnClickListener(v -> {
 
             updateAdapterItems(teamRepository.filterByName("Liverpool").getAllItems());
@@ -126,7 +128,7 @@ public class TeamsFragment extends Fragment {
         });
 
         // Filter for FC Barcelona only
-        btnFilterFcBarcelona = getActivity().findViewById(R.id.team_btn_filter_fc_barcelona);
+        btnFilterFcBarcelona = view.findViewById(R.id.team_btn_filter_fc_barcelona);
         btnFilterFcBarcelona.setOnClickListener(v -> {
             // Lambda predicate example
             updateAdapterItems(
@@ -136,7 +138,7 @@ public class TeamsFragment extends Fragment {
         });
 
         // Filter for tools only
-        btnFilterEngland = getActivity().findViewById(R.id.team_btn_filter_england);
+        btnFilterEngland = view.findViewById(R.id.team_btn_filter_england);
         btnFilterEngland.setOnClickListener(v -> {
             updateAdapterItems(
                     teamRepository.filterByCountry("England").getAllItems()
@@ -145,14 +147,14 @@ public class TeamsFragment extends Fragment {
         });
 
         // Sort by name (A-Z) (using lambda comparator)
-        btnSortName = getActivity().findViewById(R.id.team_btn_sort_name);
+        btnSortName = view.findViewById(R.id.team_btn_sort_name);
         btnSortName.setOnClickListener(v -> {
             List<Team> sortedTeams = (List<Team>) teamRepository.sortByName();
             showToast("Sorted by Name (>A-Z)");
         });
 
         // Sort by year of founding (using lambda comparator)
-        btnSortFounding = getActivity().findViewById(R.id.team_btn_sort_founding);
+        btnSortFounding = view.findViewById(R.id.team_btn_sort_founding);
         btnSortFounding.setOnClickListener(v -> {
             // Using stream with lambda comparator
             List<Team> sortedTeams = (List<Team>) teamRepository.sortByYear();
@@ -163,13 +165,13 @@ public class TeamsFragment extends Fragment {
 
 
         // Iterator demonstration - using for-each (which uses the Iterator interface)
-        btnForeachIterator = getView().findViewById(R.id.team_btn_foreach_iterator);
+        btnForeachIterator = view.findViewById(R.id.team_btn_foreach_iterator);
         btnForeachIterator.setOnClickListener(v -> {
             demonstrateForEachIterator();
         });
 
         // Iterator demonstration - using custom iterator
-        btnCustomIterator = getView().findViewById(R.id.team_btn_custom_iterator);
+        btnCustomIterator = view.findViewById(R.id.team_btn_custom_iterator);
         btnCustomIterator.setOnClickListener(v -> {
             demonstrateCustomIterator();
         });

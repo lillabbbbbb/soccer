@@ -36,7 +36,7 @@ public class MatchAdapter extends RecyclerView.Adapter<MatchAdapter.ViewHolder> 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.fragment_matches, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.match_item, parent, false);
         return new ViewHolder(view);
     }
 
@@ -47,7 +47,7 @@ public class MatchAdapter extends RecyclerView.Adapter<MatchAdapter.ViewHolder> 
         // Bind data to views
         holder.tvHomeTeam.setText(match.getHomeTeam());
         holder.tvAwayTeam.setText(match.getAwayTeam());
-        holder.tvScore.setText(match.getScore());
+        holder.tvScore.setText(String.valueOf(match.getScore()));
         holder.tvLocation.setText(match.getLocation());
         holder.tvChampionship.setText(match.getChampionship());
 
@@ -77,10 +77,10 @@ public class MatchAdapter extends RecyclerView.Adapter<MatchAdapter.ViewHolder> 
     /**
      * ViewHolder class for the adapter
      */
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvHomeTeam, tvAwayTeam, tvScore, tvLocation, tvChampionship;
 
-        ViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvHomeTeam = itemView.findViewById(R.id.homeTeamName);
             tvAwayTeam = itemView.findViewById(R.id.awayTeamName);

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="fragment_height">630dp</dimen>
+
     <dimen name="page_margin">20dp</dimen>
     <dimen name="little_margin">10dp</dimen>
     <dimen name="filter_card_height">100dp</dimen>

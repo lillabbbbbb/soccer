@@ -24,7 +24,7 @@ public class Player implements SoccerEntity{
 
     @Override
     public String getName() {
-        return "";
+        return name;
     }
 
     public void setName(String name) {

@@ -1,6 +1,7 @@
 package com.example.soccer.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,9 +36,10 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.ViewHolder
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.fragment_players, parent, false);
-        return new ViewHolder(view);
+    public PlayerAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.player_item, parent, false);
+        Log.d("PlayerAdapter", "onCreateViewHolder");
+        return new PlayerAdapter.ViewHolder(view);
     }
 
     @Override
@@ -47,7 +49,7 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.ViewHolder
         // Bind data to views
         holder.tvPlayerName.setText(player.getName());
         holder.tvPlayerTeam.setText(player.getTeam());
-        holder.tvPlayerNumber.setText(player.getPoints());
+        holder.tvPlayerNumber.setText(String.valueOf(player.getPoints()));
         holder.tvPlayerPosition.setText(player.getPosition());
 
         // Set click listener
@@ -76,15 +78,16 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.ViewHolder
     /**
      * ViewHolder class for the adapter
      */
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvPlayerTeam, tvPlayerName, tvPlayerPosition, tvPlayerNumber;
 
-        ViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvPlayerTeam = itemView.findViewById(R.id.playerTeam);
             tvPlayerPosition = itemView.findViewById(R.id.playerPos);
             tvPlayerName = itemView.findViewById(R.id.playerName);
             tvPlayerNumber = itemView.findViewById(R.id.number);
+            Log.d("PlayerAdapter", "ViewHolder constructor called");
         }
     }
 }

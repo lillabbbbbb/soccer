@@ -1,6 +1,7 @@
 package com.example.soccer;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -21,6 +22,7 @@ import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,9 +37,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
+        Log.d("MainActivity", "Initializing views:");
 
         initViews();
+        Log.d("MainActivity", "views initialized");
 
+        Log.d("MainActivity", "addOnTabSelectedListener():");
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -50,8 +55,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTabReselected(TabLayout.Tab tab) {}
         });
-
-        viewPager2 = new ViewPager2(this);
+        Log.d("MainActivity", "registerOnPageChangeCallback():");
         viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
@@ -65,6 +69,10 @@ public class MainActivity extends AppCompatActivity {
 
         tabLayout = findViewById(R.id.tabLayout);
         tvHeader = findViewById(R.id.header);
+
+        viewPager2 =  findViewById(R.id.view_pager);
+        adapter = new PageAdapter(this);
+        viewPager2.setAdapter(adapter);
     }
 
 }

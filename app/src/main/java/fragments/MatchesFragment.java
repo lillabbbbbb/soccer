@@ -39,13 +39,13 @@ public class MatchesFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_matches, container, false);
 
-        initViews();
+        initViews(view);
 
         setupMatchRepository(setupData());
 
         setupRecyclerView();
 
-        setupButtonListeners();
+        setupButtonListeners(view);
 
         return view;
     }
@@ -53,11 +53,11 @@ public class MatchesFragment extends Fragment {
     /**
      * Initialize UI components
      */
-    private void initViews() {
-        tvEmptyView = tvEmptyView.findViewById(R.id.match_tv_empty_view);
-
-        filterView = getView().findViewById(R.id.match_card_filter_options);
-        iteratorView = getView().findViewById(R.id.match_card_iterator_demo);
+    private void initViews(View view) {
+        tvEmptyView = view.findViewById(R.id.match_tv_empty_view);
+        filterView = view.findViewById(R.id.match_card_filter_options);
+        iteratorView = view.findViewById(R.id.match_card_iterator_demo);
+        recyclerView = view.findViewById(R.id.match_recycler_view);
 
     }
 
@@ -94,7 +94,7 @@ public class MatchesFragment extends Fragment {
         );
         recyclerView.setAdapter(adapter);
 
-        // Update adapter with all matchs
+        // Update adapter with all matches
         updateAdapterItems(matchRepository.getAllItems());
     }
 
@@ -102,12 +102,12 @@ public class MatchesFragment extends Fragment {
      * Set up click listeners for filter buttons
      * Demonstrates use of lambda functions and generics
      */
-    private void setupButtonListeners() {
+    private void setupButtonListeners(View view) {
         // Instantiate all buttons of this fragment
         Button btnFilterBayernMunich, btnFilterRealMadrid, btnFilterChampionsLeague, btnSortChampionship, btnSortCity, btnSortHomeTeam, btnSortByDate, btnForeachIterator, btnCustomIterator;
 
         // Show all matches
-        Button btnShowAll = getActivity().findViewById(R.id.match_btn_show_all);
+        Button btnShowAll = view.findViewById(R.id.match_btn_show_all);
         btnShowAll.setOnClickListener(v -> {
             // Lambda function for click handler
             updateAdapterItems(matchRepository.getAllItems());
@@ -115,7 +115,7 @@ public class MatchesFragment extends Fragment {
         });
 
         // Filter for Bayern Munich  
-        btnFilterBayernMunich = getActivity().findViewById(R.id.match_btn_filter_bayern_munich);
+        btnFilterBayernMunich = view.findViewById(R.id.match_btn_filter_bayern_munich);
         btnFilterBayernMunich.setOnClickListener(v -> {
 
             updateAdapterItems(matchRepository.filterByTeam("Bayern Munich").getAllItems());
@@ -123,7 +123,7 @@ public class MatchesFragment extends Fragment {
         });
 
         // Filter for Real Madrid
-        btnFilterRealMadrid = getActivity().findViewById(R.id.match_btn_filter_real_madrid);
+        btnFilterRealMadrid = view.findViewById(R.id.match_btn_filter_real_madrid);
         btnFilterRealMadrid.setOnClickListener(v -> {
             // Lambda predicate example
             updateAdapterItems(
@@ -133,7 +133,7 @@ public class MatchesFragment extends Fragment {
         });
 
         // Filter for tools  
-        btnFilterChampionsLeague = getActivity().findViewById(R.id.match_btn_filter_champions_league);
+        btnFilterChampionsLeague = view.findViewById(R.id.match_btn_filter_champions_league);
         btnFilterChampionsLeague.setOnClickListener(v -> {
             updateAdapterItems(
                     matchRepository.filterByChampionship("Champions League").getAllItems()
@@ -142,14 +142,14 @@ public class MatchesFragment extends Fragment {
         });
 
         // Sort by name (A-Z) (using lambda comparator)
-        btnSortChampionship = getActivity().findViewById(R.id.match_btn_sort_championship);
+        btnSortChampionship = view.findViewById(R.id.match_btn_sort_championship);
         btnSortChampionship.setOnClickListener(v -> {
             List<Match> sortedMatchs = (List<Match>) matchRepository.sortByChampionship();
             showToast("Sorted by Name (>A-Z)");
         });
 
         // Sort by age (Ascending) (using lambda comparator)
-        btnSortCity = getActivity().findViewById(R.id.match_btn_sort_city);
+        btnSortCity = view.findViewById(R.id.match_btn_sort_city);
         btnSortCity.setOnClickListener(v -> {
             // Using stream with lambda comparator
             List<Match> sortedMatchs = (List<Match>) matchRepository.sortByCity();
@@ -159,42 +159,42 @@ public class MatchesFragment extends Fragment {
         });
 
         // Sort by date (using lambda comparator)
-        btnSortByDate = getActivity().findViewById(R.id.match_btn_sort_date);
+        btnSortByDate = view.findViewById(R.id.match_btn_sort_date);
         btnSortByDate.setOnClickListener(v -> {
             // Using stream with lambda comparator
-            List<Match> sortedMatchs = (List<Match>) matchRepository.sortByDate();
+            List<Match> sortedMatches = (List<Match>) matchRepository.sortByDate();
 
-            updateAdapterItems(sortedMatchs);
+            updateAdapterItems(sortedMatches);
             showToast("Sorted by Date");
         });
 
         // Sort by team (A-Z) (using lambda comparator)
-        btnSortHomeTeam = getActivity().findViewById(R.id.match_btn_sort_home_team);
+        btnSortHomeTeam = view.findViewById(R.id.match_btn_sort_home_team);
         btnSortHomeTeam.setOnClickListener(v -> {
             // Using stream with lambda comparator
-            List<Match> sortedMatchs = (List<Match>) matchRepository.sortByHomeTeam();
+            List<Match> sortedMatches = (List<Match>) matchRepository.sortByHomeTeam();
 
-            updateAdapterItems(sortedMatchs);
+            updateAdapterItems(sortedMatches);
             showToast("Sorted by Home Team (A-Z)");
         });
 
 
 
         // Iterator demonstration - using for-each (which uses the Iterator interface)
-        btnForeachIterator = getView().findViewById(R.id.match_btn_foreach_iterator);
+        btnForeachIterator = view.findViewById(R.id.match_btn_foreach_iterator);
         btnForeachIterator.setOnClickListener(v -> {
             demonstrateForEachIterator();
         });
 
         // Iterator demonstration - using custom iterator
-        btnCustomIterator = getView().findViewById(R.id.match_btn_custom_iterator);
+        btnCustomIterator = view.findViewById(R.id.match_btn_custom_iterator);
         btnCustomIterator.setOnClickListener(v -> {
             demonstrateCustomIterator();
         });
     }
 
     /**
-     * Update the adapter matchs and manage empty view
+     * Update the adapter matches and manage empty view
      * @param matches the new matches to display
      */
     private void updateAdapterItems(List<Match> matches) {

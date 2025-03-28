@@ -2,6 +2,7 @@ package com.example.soccer.adapter;
 
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,19 +38,21 @@ public class TeamAdapter extends RecyclerView.Adapter<TeamAdapter.ViewHolder> {
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.fragment_teams, parent, false);
-        return new ViewHolder(view);
+    public TeamAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.team_item, parent, false);
+        Log.d("TeamAdapter", "onCreateViewHolder");
+        return new TeamAdapter.ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull TeamAdapter.ViewHolder holder, int position) {
         Team team = teams.get(position);
 
         // Bind data to views
         holder.tvTeamName.setText(team.getName());
-        holder.tvteamLocation.setText(String.format("%d,%d", team.getCountry(), team.getHome()));
-        holder.tvTeamYear.setText(team.getYear());
+        holder.tvTeamLocation.setText(String.format("%s, %s", team.getCountry(), team.getHome()));
+        holder.tvTeamYear.setText(String.valueOf(team.getYear()));
+        Log.d("TeamAdapter", "binding data to views");
 
         // Set click listener
         holder.itemView.setOnClickListener(v -> {
@@ -77,14 +80,16 @@ public class TeamAdapter extends RecyclerView.Adapter<TeamAdapter.ViewHolder> {
     /**
      * ViewHolder class for the adapter
      */
-    static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvTeamName, tvteamLocation, tvTeamYear;
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView tvTeamName, tvTeamLocation, tvTeamYear;
 
-        ViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvTeamName = itemView.findViewById(R.id.homeTeamName);
-            tvteamLocation = itemView.findViewById(R.id.awayTeamName);
-            tvTeamYear = itemView.findViewById(R.id.score);
+
+            tvTeamName = itemView.findViewById(R.id.team_name);
+            tvTeamLocation = itemView.findViewById(R.id.team_location);
+            tvTeamYear = itemView.findViewById(R.id.team_year);
+            Log.d("TeamAdapter", "ViewHolder constructor called");
         }
     }
 }
