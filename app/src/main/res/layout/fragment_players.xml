@@ -11,7 +11,7 @@
         tools:context=".MainActivity">
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/card_filter_options"
+            android:id="@+id/player_card_filter_options"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -98,7 +98,7 @@
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/card_iterator_demo"
+            android:id="@+id/player_card_iterator_demo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -108,7 +108,7 @@
             app:cardElevation="4dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/card_filter_options">
+            app:layout_constraintTop_toBottomOf="@+id/player_card_filter_options">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -156,12 +156,12 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/card_iterator_demo"
+            app:layout_constraintTop_toBottomOf="@+id/player_card_iterator_demo"
             app:layout_constraintVertical_bias="1.0"
             tools:listitem="@layout/player_item" />
 
         <TextView
-            android:id="@+id/tv_empty_view"
+            android:id="@+id/player_tv_empty_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="No items to display"

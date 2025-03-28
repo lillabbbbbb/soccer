@@ -4,22 +4,33 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.soccer.DataProvider;
 import com.example.soccer.R;
-import com.example.soccer.model.Match;
+import com.example.soccer.adapter.PlayerAdapter;
 import com.example.soccer.model.Player;
-import com.example.soccer.model.Team;
+import com.example.soccer.repository.Repository;
+import com.example.soccer.repository.PlayerRepository;
+import com.google.android.material.card.MaterialCardView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class PlayersFragment extends Fragment {
+
+    private RecyclerView recyclerView;
+    private PlayerAdapter adapter;
+    private PlayerRepository<Player> playerRepository;
+    TextView tvEmptyView;
+    MaterialCardView filterView, iteratorView;
 
 
     @Override
@@ -30,7 +41,7 @@ public class PlayersFragment extends Fragment {
 
         initViews();
 
-        //set up sample data using DataProvider
+        setupPlayerRepository(setupData());
 
         setupRecyclerView();
 
@@ -43,30 +54,49 @@ public class PlayersFragment extends Fragment {
      * Initialize UI components
      */
     private void initViews() {
-        repository = findViewById(R.id.recycler_inventory);
-        tvEmptyView = findViewById(R.id.tv_empty_view);
+        tvEmptyView = tvEmptyView.findViewById(R.id.player_tv_empty_view);
+
+        filterView = getView().findViewById(R.id.player_card_filter_options);
+        iteratorView = getView().findViewById(R.id.player_card_iterator_demo);
+
+
     }
 
     /**
      * Set up the RecyclerView and adapter
      */
+    private List<Player> setupData(){
+        //set up sample data using DataProvider
+        //get test data from a DataProvider object
+        DataProvider dataProvider = new DataProvider();
+        return new ArrayList<>(dataProvider.createSamplePlayers());
+    }
+    private void setupPlayerRepository(List<Player> players){
+        //initialize playerRepository
+        playerRepository = new PlayerRepository<>();
+
+        //append players to the playerRepository
+        for(int i = 0; i < players.size(); i++){
+            playerRepository.addItem(players.get(i));
+        }
+    }
+
     private void setupRecyclerView() {
-        recyclerInventory.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         // Create the adapter with an empty list initially
-        adapter = new InventoryAdapter(
-                this,
+        adapter = new PlayerAdapter(
+                getContext(),
                 new ArrayList<>(),
-                (item, position) -> {
+                (player, position) -> {
                     // Lambda function for item click
-                    showItemDetails(item);
+                    showPlayerDetails(player);
                 }
         );
-
-        recyclerInventory.setAdapter(adapter);
+        recyclerView.setAdapter(adapter);
 
         // Update adapter with all items
-        updateAdapterItems(inventoryContainer.getAllItems());
+        updateAdapterItems(playerRepository.getAllItems());
     }
 
     /**
@@ -74,74 +104,81 @@ public class PlayersFragment extends Fragment {
      * Demonstrates use of lambda functions and generics
      */
     private void setupButtonListeners() {
-        // Show all items
-        Button btnShowAll = findViewById(R.id.btn_show_all);
+        // Instantiate all buttons of this fragment
+        Button btnFilterportugal, btnFilterFcBarcelona, btnFilterEngland, btnSortName, btnSortFounding, btnForeachIterator, btnCustomIterator;
+
+        // Show all players
+        Button btnShowAll = getActivity().findViewById(R.id.player_btn_show_all);
         btnShowAll.setOnClickListener(v -> {
             // Lambda function for click handler
-            updateAdapterItems(inventoryContainer.getAllItems());
-            showToast("Showing all items");
+            updateAdapterItems(playerRepository.getAllItems());
+            showToast("Showing all players");
         });
 
-        // Filter for books only using lambda predicate
-        Button btnFilterBooks = findViewById(R.id.btn_filter_books);
-        btnFilterBooks.setOnClickListener(v -> {
+        // Filter for Portugal only
+        btnFilterportugal = getActivity().findViewById(R.id.player_btn_filter_portugal);
+        btnFilterportugal.setOnClickListener(v -> {
 
-            // Using lambda predicate with generics
-            Predicate<InventoryItem> bookFilter = item -> item instanceof Book;
-            InventoryContainer<InventoryItem> filtered = inventoryContainer.filter(bookFilter);
-
-            updateAdapterItems(filtered.getAllItems());
-            showToast("Filtered: Books only");
+            updateAdapterItems(playerRepository.filterByName("Portugal").getAllItems());
+            showToast("Filtered: Portugal only");
         });
 
-        // Filter for electronics only
-        Button btnFilterElectronics = findViewById(R.id.btn_filter_electronics);
-        btnFilterElectronics.setOnClickListener(v -> {
+        // Filter for FC Barcelona only
+        btnFilterFcBarcelona = getActivity().findViewById(R.id.player_btn_filter_fc_barcelona);
+        btnFilterFcBarcelona.setOnClickListener(v -> {
             // Lambda predicate example
             updateAdapterItems(
-                    inventoryContainer.filter(item -> item instanceof Electronic).getAllItems()
+                    playerRepository.filterByTeam("FC Barcelona").getAllItems()
             );
-            showToast("Filtered: Electronics only");
+            showToast("Filtered: FC Barcelona only");
         });
 
         // Filter for tools only
-        Button btnFilterTools = findViewById(R.id.btn_filter_tools);
-        btnFilterTools.setOnClickListener(v -> {
+        btnFilterEngland = getActivity().findViewById(R.id.player_btn_filter_england);
+        btnFilterEngland.setOnClickListener(v -> {
             updateAdapterItems(
-                    inventoryContainer.filter(item -> item instanceof Tool).getAllItems()
+                    playerRepository.filterByCountry("England").getAllItems()
             );
-            showToast("Filtered: Tools only");
+            showToast("Filtered: England only");
         });
 
-        // Filter for expensive items (price > 100)
-        Button btnFilterExpensive = findViewById(R.id.btn_filter_expensive);
-        btnFilterExpensive.setOnClickListener(v -> {
-            updateAdapterItems(
-                    inventoryContainer.filter(item -> item.getPrice() > 100).getAllItems()
-            );
-            showToast("Filtered: Expensive items (>$100)");
+        // Sort by name (A-Z) (using lambda comparator)
+        btnSortName = getActivity().findViewById(R.id.player_btn_sort_name);
+        btnSortName.setOnClickListener(v -> {
+            List<Player> sortedPlayers = (List<Player>) playerRepository.sortByName();
+            showToast("Sorted by Name (>A-Z)");
         });
 
-        // Sort by price (using lambda comparator)
-        Button btnSortPrice = findViewById(R.id.btn_sort_price);
-        btnSortPrice.setOnClickListener(v -> {
+        // Sort by age (Ascending) (using lambda comparator)
+        btnSortFounding = getActivity().findViewById(R.id.player_btn_sort_age);
+        btnSortFounding.setOnClickListener(v -> {
             // Using stream with lambda comparator
-            List<InventoryItem> sortedItems = inventoryContainer.getAllItems().stream()
-                    .sorted(Comparator.comparingDouble(InventoryItem::getPrice))
-                    .collect(Collectors.toList());
+            List<Player> sortedPlayers = (List<Player>) playerRepository.sortByAge();
 
-            updateAdapterItems(sortedItems);
-            showToast("Sorted by price (ascending)");
+            updateAdapterItems(sortedPlayers);
+            showToast("Sorted by Age (Ascending)");
         });
+
+        // Sort by team (A-Z) (using lambda comparator)
+        btnSortFounding = getActivity().findViewById(R.id.player_btn_sort_team);
+        btnSortFounding.setOnClickListener(v -> {
+            // Using stream with lambda comparator
+            List<Player> sortedPlayers = (List<Player>) playerRepository.sortByTeam();
+
+            updateAdapterItems(sortedPlayers);
+            showToast("Sorted by Team (A-Z)");
+        });
+
+
 
         // Iterator demonstration - using for-each (which uses the Iterator interface)
-        Button btnForeachIterator = findViewById(R.id.btn_foreach_iterator);
+        btnForeachIterator = getView().findViewById(R.id.player_btn_foreach_iterator);
         btnForeachIterator.setOnClickListener(v -> {
             demonstrateForEachIterator();
         });
 
         // Iterator demonstration - using custom iterator
-        Button btnCustomIterator = findViewById(R.id.btn_custom_iterator);
+        btnCustomIterator = getView().findViewById(R.id.player_btn_custom_iterator);
         btnCustomIterator.setOnClickListener(v -> {
             demonstrateCustomIterator();
         });
@@ -149,18 +186,18 @@ public class PlayersFragment extends Fragment {
 
     /**
      * Update the adapter items and manage empty view
-     * @param items the new items to display
+     * @param players the new players to display
      */
-    private void updateAdapterItems(List<Match> matches) {
-        adapter.updateMatches(matches);
+    private void updateAdapterItems(List<Player> players) {
+        adapter.updatePlayers(players);
 
         // Show/hide empty view
-        if (matches.isEmpty()) {
+        if (players.isEmpty()) {
             tvEmptyView.setVisibility(android.view.View.VISIBLE);
-            recyclerInventory.setVisibility(android.view.View.GONE);
+            recyclerView.setVisibility(android.view.View.GONE);
         } else {
             tvEmptyView.setVisibility(android.view.View.GONE);
-            recyclerInventory.setVisibility(android.view.View.VISIBLE);
+            recyclerView.setVisibility(android.view.View.VISIBLE);
         }
     }
 
@@ -172,8 +209,9 @@ public class PlayersFragment extends Fragment {
         StringBuilder result = new StringBuilder("Using for-each loop (Iterator):\n");
 
         // Using the for-each loop which uses the Iterator interface
-        for (InventoryItem item : inventoryContainer) {
-            result.append(" - ").append(item.getName()).append("\n");
+        for (Object object : playerRepository.getAllItems()) {
+            Player player = (Player) object;
+            result.append(" - ").append(player.getName()).append("\n");
         }
 
         showToast("Check logs for iterator demo results");
@@ -188,13 +226,13 @@ public class PlayersFragment extends Fragment {
         StringBuilder result = new StringBuilder("Using custom iterator:\n");
 
         // Get custom iterator
-        InventoryContainer<InventoryItem>.InventoryIterator iterator =
-                inventoryContainer.getCustomIterator();
+        Repository<Player>.RepositoryIterator iterator =
+                playerRepository.getCustomIterator();
 
         // Manually use the iterator
         while (iterator.hasNext()) {
-            InventoryItem item = iterator.next();
-            result.append(" - ").append(item.getName()).append("\n");
+            Player player = iterator.next();
+            result.append(" - ").append(player.getName()).append("\n");
         }
 
         showToast("Check logs for custom iterator demo results");
@@ -202,12 +240,12 @@ public class PlayersFragment extends Fragment {
     }
 
     /**
-     * Show details for an item
-     * @param item the item to show details for
+     * Show details for a player
+     * @param player the player to show details for
      */
-    private void showItemDetails(InventoryItem item) {
-        // Simple toast to show item details
-        showToast("Selected: " + item.getName());
+    private void showPlayerDetails(Player player) {
+        // Simple toast to show player details
+        showToast("Selected: " + player.getName());
     }
 
     /**
@@ -215,13 +253,6 @@ public class PlayersFragment extends Fragment {
      * @param message the message to show
      */
     private void showToast(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-
-
-        //get test data from a DataProvider object
-        DataProvider dataProvider = new DataProvider();
-        List<Team> teams = dataProvider.createSampleTeams();
-        List<Player> players = dataProvider.createSamplePlayers();
-        List<Match> matches = dataProvider.createSampleMatches();
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
 }

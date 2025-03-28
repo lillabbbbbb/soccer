@@ -67,7 +67,7 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.ViewHolder
      * Update the adapter data
      * @param newPlayers new list of players
      */
-    public void updateItems(List<Player> newPlayers) {
+    public void updatePlayers(List<Player> newPlayers) {
         players.clear();
         players.addAll(newPlayers);
         notifyDataSetChanged();

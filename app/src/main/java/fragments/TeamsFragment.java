@@ -19,6 +19,7 @@ import com.example.soccer.adapter.TeamAdapter;
 import com.example.soccer.model.Team;
 import com.example.soccer.repository.Repository;
 import com.example.soccer.repository.TeamRepository;
+import com.google.android.material.card.MaterialCardView;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -32,6 +33,7 @@ public class TeamsFragment extends Fragment {
     private TeamAdapter adapter;
     private TeamRepository<Team> teamRepository;
     TextView tvEmptyView;
+    MaterialCardView filterView, iteratorView;
 
 
     @Override
@@ -56,6 +58,9 @@ public class TeamsFragment extends Fragment {
      */
     private void initViews() {
         tvEmptyView = tvEmptyView.findViewById(R.id.team_tv_empty_view);
+
+        filterView = getView().findViewById(R.id.team_card_filter_options);
+        iteratorView = getView().findViewById(R.id.team_card_iterator_demo);
 
     }
 
@@ -102,7 +107,7 @@ public class TeamsFragment extends Fragment {
      */
     private void setupButtonListeners() {
         // Instantiate all buttons of this fragment
-        Button btnFilterLiverpool, btnFilterFcBarcelona, btnFilterEngland, btnSortName, btnSortFounding;
+        Button btnFilterLiverpool, btnFilterFcBarcelona, btnFilterEngland, btnSortName, btnSortFounding, btnForeachIterator, btnCustomIterator;
 
         // Show all teams
         Button btnShowAll = getActivity().findViewById(R.id.team_btn_show_all);
@@ -112,24 +117,20 @@ public class TeamsFragment extends Fragment {
             showToast("Showing all teams");
         });
 
-        // Filter teams from England
+        // Filter for Liverpool only
         btnFilterLiverpool = getActivity().findViewById(R.id.team_btn_filter_liverpool);
         btnFilterLiverpool.setOnClickListener(v -> {
 
-            // Using lambda predicate with generics
-            Predicate<Team> liverpoolFilter = team -> team.getName() == "Liverpool";
-            Repository<Team> filtered = teamRepository.filter(liverpoolFilter);
-
-            updateAdapterItems(filtered.getAllItems());
+            updateAdapterItems(teamRepository.filterByName("Liverpool").getAllItems());
             showToast("Filtered: Liverpool only");
         });
 
-        // Filter for FC Barcelona team only
+        // Filter for FC Barcelona only
         btnFilterFcBarcelona = getActivity().findViewById(R.id.team_btn_filter_fc_barcelona);
         btnFilterFcBarcelona.setOnClickListener(v -> {
             // Lambda predicate example
             updateAdapterItems(
-                    teamRepository.filter(team -> team.getName() == "FC Barcelona").getAllItems()
+                    teamRepository.filterByName("FC Barcelona").getAllItems()
             );
             showToast("Filtered: FC Barcelona only");
         });
@@ -138,41 +139,37 @@ public class TeamsFragment extends Fragment {
         btnFilterEngland = getActivity().findViewById(R.id.team_btn_filter_england);
         btnFilterEngland.setOnClickListener(v -> {
             updateAdapterItems(
-                    teamRepository.filter(team -> team.getCountry() == "England").getAllItems()
+                    teamRepository.filterByCountry("England").getAllItems()
             );
-            showToast("Filtered: Tools only");
+            showToast("Filtered: England only");
         });
 
         // Sort by name (A-Z) (using lambda comparator)
         btnSortName = getActivity().findViewById(R.id.team_btn_sort_name);
         btnSortName.setOnClickListener(v -> {
-            List<Team> sortedTeams = (List<Team>) teamRepository.getAllItems().stream()
-                    .sorted(Comparator.comparing(Team::getName))
-                    .collect(Collectors.toList());
-            showToast("Filtered: Expensive items (>$100)");
+            List<Team> sortedTeams = (List<Team>) teamRepository.sortByName();
+            showToast("Sorted by Name (>A-Z)");
         });
 
         // Sort by year of founding (using lambda comparator)
         btnSortFounding = getActivity().findViewById(R.id.team_btn_sort_founding);
         btnSortFounding.setOnClickListener(v -> {
             // Using stream with lambda comparator
-            List<Team> sortedTeams = (List<Team>) teamRepository.getAllItems().stream()
-                    .sorted(Comparator.comparingDouble(Team::getYear))
-                    .collect(Collectors.toList());
+            List<Team> sortedTeams = (List<Team>) teamRepository.sortByYear();
 
             updateAdapterItems(sortedTeams);
-            showToast("Sorted by price (ascending)");
+            showToast("Sorted by year (ascending)");
         });
 
 
         // Iterator demonstration - using for-each (which uses the Iterator interface)
-        Button btnForeachIterator = getView().findViewById(R.id.team_btn_foreach_iterator);
+        btnForeachIterator = getView().findViewById(R.id.team_btn_foreach_iterator);
         btnForeachIterator.setOnClickListener(v -> {
             demonstrateForEachIterator();
         });
 
         // Iterator demonstration - using custom iterator
-        Button btnCustomIterator = getView().findViewById(R.id.team_btn_custom_iterator);
+        btnCustomIterator = getView().findViewById(R.id.team_btn_custom_iterator);
         btnCustomIterator.setOnClickListener(v -> {
             demonstrateCustomIterator();
         });
@@ -180,7 +177,7 @@ public class TeamsFragment extends Fragment {
 
     /**
      * Update the adapter items and manage empty view
-     * @param teams the new items to display
+     * @param teams the new teams to display
      */
     private void updateAdapterItems(List<Team> teams) {
         adapter.updateTeams(teams);
@@ -203,7 +200,8 @@ public class TeamsFragment extends Fragment {
         StringBuilder result = new StringBuilder("Using for-each loop (Iterator):\n");
 
         // Using the for-each loop which uses the Iterator interface
-        for (Team team : teamRepository) {
+        for (Object object : teamRepository.getAllItems()) {
+            Team team = (Team) object;
             result.append(" - ").append(team.getName()).append("\n");
         }
 

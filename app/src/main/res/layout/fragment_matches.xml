@@ -82,9 +82,17 @@
                                 android:text="Sort By Championship (A-Z)" />
 
                             <Button
+                                android:id="@+id/match_btn_sort_date"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="8dp"
+                                android:text="Sort By Date" />
+
+                            <Button
                                 android:id="@+id/match_btn_sort_city"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginEnd="8dp"
                                 android:text="Sort By City (A-Z)" />
 
                             <Button
@@ -161,7 +169,7 @@
                 tools:listitem="@layout/match_item" />
 
             <TextView
-                android:id="@+id/tv_empty_view"
+                android:id="@+id/match_tv_empty_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="No items to display"
