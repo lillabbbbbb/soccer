@@ -11,23 +11,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.soccer.DataProvider;
 import com.example.soccer.R;
 import com.example.soccer.adapter.TeamAdapter;
-import com.example.soccer.model.Match;
-import com.example.soccer.model.Player;
 import com.example.soccer.model.Team;
 import com.example.soccer.repository.Repository;
+import com.example.soccer.repository.TeamRepository;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class TeamsFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private TeamAdapter adapter;
-    private ArrayList<Team> teams;
+    private TeamRepository<Team> teamRepository;
     TextView tvEmptyView;
 
 
@@ -39,12 +42,7 @@ public class TeamsFragment extends Fragment {
 
         initViews();
 
-        //set up sample data using DataProvider
-        //get test data from a DataProvider object
-        DataProvider dataProvider = new DataProvider();
-        List<Team> teams = dataProvider.createSampleTeams();
-        List<Player> players = dataProvider.createSamplePlayers();
-        List<Match> matches = dataProvider.createSampleMatches();
+        setupTeamRepository(setupData());
 
         setupRecyclerView();
 
@@ -64,12 +62,28 @@ public class TeamsFragment extends Fragment {
     /**
      * Set up the RecyclerView and adapter
      */
+    private List<Team> setupData(){
+        //set up sample data using DataProvider
+        //get test data from a DataProvider object
+        DataProvider dataProvider = new DataProvider();
+        return new ArrayList<>(dataProvider.createSampleTeams());
+    }
+    private void setupTeamRepository(List<Team> teams){
+        //initialize teamRepository
+        teamRepository = new TeamRepository<>();
+
+        //append teams to the teamRepository
+        for(int i = 0; i < teams.size(); i++){
+            teamRepository.addItem(teams.get(i));
+        }
+    }
+
     private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         // Create the adapter with an empty list initially
         adapter = new TeamAdapter(
-                this,
+                getContext(),
                 new ArrayList<>(),
                 (team, position) -> {
                     // Lambda function for item click
@@ -79,7 +93,7 @@ public class TeamsFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         // Update adapter with all items
-        updateAdapterItems(recyclerView.getAllItems());
+        updateAdapterItems(teamRepository.getAllItems());
     }
 
     /**
@@ -87,74 +101,78 @@ public class TeamsFragment extends Fragment {
      * Demonstrates use of lambda functions and generics
      */
     private void setupButtonListeners() {
-        // Show all items
-        Button btnShowAll = findViewById(R.id.btn_show_all);
+        // Instantiate all buttons of this fragment
+        Button btnFilterLiverpool, btnFilterFcBarcelona, btnFilterEngland, btnSortName, btnSortFounding;
+
+        // Show all teams
+        Button btnShowAll = getActivity().findViewById(R.id.team_btn_show_all);
         btnShowAll.setOnClickListener(v -> {
             // Lambda function for click handler
-            updateAdapterItems(inventoryContainer.getAllItems());
-            showToast("Showing all items");
+            updateAdapterItems(teamRepository.getAllItems());
+            showToast("Showing all teams");
         });
 
-        // Filter for books only using lambda predicate
-        Button btnFilterBooks = findViewById(R.id.btn_filter_books);
-        btnFilterBooks.setOnClickListener(v -> {
+        // Filter teams from England
+        btnFilterLiverpool = getActivity().findViewById(R.id.team_btn_filter_liverpool);
+        btnFilterLiverpool.setOnClickListener(v -> {
 
             // Using lambda predicate with generics
-            Predicate<InventoryItem> bookFilter = item -> item instanceof Book;
-            InventoryContainer<InventoryItem> filtered = inventoryContainer.filter(bookFilter);
+            Predicate<Team> liverpoolFilter = team -> team.getName() == "Liverpool";
+            Repository<Team> filtered = teamRepository.filter(liverpoolFilter);
 
             updateAdapterItems(filtered.getAllItems());
-            showToast("Filtered: Books only");
+            showToast("Filtered: Liverpool only");
         });
 
-        // Filter for electronics only
-        Button btnFilterElectronics = findViewById(R.id.btn_filter_electronics);
-        btnFilterElectronics.setOnClickListener(v -> {
+        // Filter for FC Barcelona team only
+        btnFilterFcBarcelona = getActivity().findViewById(R.id.team_btn_filter_fc_barcelona);
+        btnFilterFcBarcelona.setOnClickListener(v -> {
             // Lambda predicate example
             updateAdapterItems(
-                    inventoryContainer.filter(item -> item instanceof Electronic).getAllItems()
+                    teamRepository.filter(team -> team.getName() == "FC Barcelona").getAllItems()
             );
-            showToast("Filtered: Electronics only");
+            showToast("Filtered: FC Barcelona only");
         });
 
         // Filter for tools only
-        Button btnFilterTools = findViewById(R.id.btn_filter_tools);
-        btnFilterTools.setOnClickListener(v -> {
+        btnFilterEngland = getActivity().findViewById(R.id.team_btn_filter_england);
+        btnFilterEngland.setOnClickListener(v -> {
             updateAdapterItems(
-                    inventoryContainer.filter(item -> item instanceof Tool).getAllItems()
+                    teamRepository.filter(team -> team.getCountry() == "England").getAllItems()
             );
             showToast("Filtered: Tools only");
         });
 
-        // Filter for expensive items (price > 100)
-        Button btnFilterExpensive = findViewById(R.id.btn_filter_expensive);
-        btnFilterExpensive.setOnClickListener(v -> {
-            updateAdapterItems(
-                    inventoryContainer.filter(item -> item.getPrice() > 100).getAllItems()
-            );
+        // Sort by name (A-Z) (using lambda comparator)
+        btnSortName = getActivity().findViewById(R.id.team_btn_sort_name);
+        btnSortName.setOnClickListener(v -> {
+            List<Team> sortedTeams = (List<Team>) teamRepository.getAllItems().stream()
+                    .sorted(Comparator.comparing(Team::getName))
+                    .collect(Collectors.toList());
             showToast("Filtered: Expensive items (>$100)");
         });
 
-        // Sort by price (using lambda comparator)
-        Button btnSortPrice = findViewById(R.id.btn_sort_price);
-        btnSortPrice.setOnClickListener(v -> {
+        // Sort by year of founding (using lambda comparator)
+        btnSortFounding = getActivity().findViewById(R.id.team_btn_sort_founding);
+        btnSortFounding.setOnClickListener(v -> {
             // Using stream with lambda comparator
-            List<InventoryItem> sortedItems = inventoryContainer.getAllItems().stream()
-                    .sorted(Comparator.comparingDouble(InventoryItem::getPrice))
+            List<Team> sortedTeams = (List<Team>) teamRepository.getAllItems().stream()
+                    .sorted(Comparator.comparingDouble(Team::getYear))
                     .collect(Collectors.toList());
 
-            updateAdapterItems(sortedItems);
+            updateAdapterItems(sortedTeams);
             showToast("Sorted by price (ascending)");
         });
 
+
         // Iterator demonstration - using for-each (which uses the Iterator interface)
-        Button btnForeachIterator = findViewById(R.id.btn_foreach_iterator);
+        Button btnForeachIterator = getView().findViewById(R.id.team_btn_foreach_iterator);
         btnForeachIterator.setOnClickListener(v -> {
             demonstrateForEachIterator();
         });
 
         // Iterator demonstration - using custom iterator
-        Button btnCustomIterator = findViewById(R.id.btn_custom_iterator);
+        Button btnCustomIterator = getView().findViewById(R.id.team_btn_custom_iterator);
         btnCustomIterator.setOnClickListener(v -> {
             demonstrateCustomIterator();
         });
@@ -185,7 +203,7 @@ public class TeamsFragment extends Fragment {
         StringBuilder result = new StringBuilder("Using for-each loop (Iterator):\n");
 
         // Using the for-each loop which uses the Iterator interface
-        for (Team team : recyclerView) {
+        for (Team team : teamRepository) {
             result.append(" - ").append(team.getName()).append("\n");
         }
 
@@ -202,7 +220,7 @@ public class TeamsFragment extends Fragment {
 
         // Get custom iterator
         Repository<Team>.RepositoryIterator iterator =
-                inventoryContainer.getCustomIterator();
+                teamRepository.getCustomIterator();
 
         // Manually use the iterator
         while (iterator.hasNext()) {
@@ -215,8 +233,8 @@ public class TeamsFragment extends Fragment {
     }
 
     /**
-     * Show details for an item
-     * @param team the item to show details for
+     * Show details for a team
+     * @param team the team to show details for
      */
     private void showItemDetails(Team team) {
         // Simple toast to show item details
@@ -228,6 +246,6 @@ public class TeamsFragment extends Fragment {
      * @param message the message to show
      */
     private void showToast(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
 }

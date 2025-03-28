@@ -26,7 +26,7 @@ public class PageAdapter extends FragmentStateAdapter {
             case 2:
                 return new MatchesFragment();
             default:
-                return new AllFragment();
+                return new TeamsFragment();
         }
     }
 

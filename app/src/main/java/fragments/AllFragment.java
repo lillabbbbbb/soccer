@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.soccer.DataProvider;
 import com.example.soccer.R;
@@ -200,12 +201,12 @@ public class AllFragment extends Fragment {
     }
 
     /**
-     * Show details for an item
-     * @param item the item to show details for
+     * Show details for an team
+     * @param team the team to show details for
      */
-    private void showItemDetails(InventoryItem item) {
+    private void showItemDetails(Team team) {
         // Simple toast to show item details
-        showToast("Selected: " + item.getName());
+        showToast("Selected: " + team.getName());
     }
 
     /**
@@ -213,13 +214,6 @@ public class AllFragment extends Fragment {
      * @param message the message to show
      */
     private void showToast(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-
-
-        //get test data from a DataProvider object
-        DataProvider dataProvider = new DataProvider();
-        List<Team> teams = dataProvider.createSampleTeams();
-        List<Player> players = dataProvider.createSamplePlayers();
-        List<Match> matches = dataProvider.createSampleMatches();
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
 }
