@@ -76,16 +76,16 @@ public class Repository<T> implements Iterable<T>{
     }
 
     public class RepositoryIterator implements Iterator<T>{
-        private int currentIndex = 0;
+        private int currentIndex = list.size() - 1;
 
         @Override
         public boolean hasNext() {
-            return currentIndex < list.size();
+            return currentIndex >= 0;
         }
 
         @Override
         public T next() {
-            return list.get(currentIndex++);
+            return list.get(currentIndex--);
         }
     }
 }

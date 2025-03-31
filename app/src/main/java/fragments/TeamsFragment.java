@@ -66,9 +66,6 @@ public class TeamsFragment extends Fragment {
         recyclerView = view.findViewById(R.id.team_recycler_view);
     }
 
-    /**
-     * Set up the RecyclerView and adapter
-     */
     private List<Team> setupData(){
         //set up sample data using DataProvider
         //get test data from a DataProvider object
@@ -84,7 +81,9 @@ public class TeamsFragment extends Fragment {
             teamRepository.addItem(teams.get(i));
         }
     }
-
+    /**
+     * Set up the RecyclerView and adapter
+     */
     private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
