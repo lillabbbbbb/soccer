@@ -51,6 +51,7 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.ViewHolder
         holder.tvPlayerTeam.setText(player.getTeam());
         holder.tvPlayerNumber.setText(String.valueOf(player.getPoints()));
         holder.tvPlayerPosition.setText(player.getPosition());
+        holder.tvPlayerAge.setText(String.valueOf(player.getAge()));
 
         // Set click listener
         holder.itemView.setOnClickListener(v -> {
@@ -79,7 +80,7 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.ViewHolder
      * ViewHolder class for the adapter
      */
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvPlayerTeam, tvPlayerName, tvPlayerPosition, tvPlayerNumber;
+        TextView tvPlayerTeam, tvPlayerName, tvPlayerPosition, tvPlayerNumber, tvPlayerAge;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -87,6 +88,7 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.ViewHolder
             tvPlayerPosition = itemView.findViewById(R.id.playerPos);
             tvPlayerName = itemView.findViewById(R.id.playerName);
             tvPlayerNumber = itemView.findViewById(R.id.number);
+            tvPlayerAge = itemView.findViewById(R.id.playerAge);
             Log.d("PlayerAdapter", "ViewHolder constructor called");
         }
     }

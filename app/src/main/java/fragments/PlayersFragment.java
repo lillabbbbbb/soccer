@@ -120,7 +120,7 @@ public class PlayersFragment extends Fragment {
         btnFilterportugal.setOnClickListener(v -> {
 
             updateAdapterItems(playerRepository.filterByName("Portugal").getAllItems());
-            showToast("Filtered: Portugal only");
+            showToast("Filtered: Portugal");
         });
 
         // Filter for FC Barcelona only
@@ -130,7 +130,7 @@ public class PlayersFragment extends Fragment {
             updateAdapterItems(
                     playerRepository.filterByTeam("FC Barcelona").getAllItems()
             );
-            showToast("Filtered: FC Barcelona only");
+            showToast("Filtered: FC Barcelona");
         });
 
         // Filter for tools only
@@ -139,13 +139,14 @@ public class PlayersFragment extends Fragment {
             updateAdapterItems(
                     playerRepository.filterByCountry("England").getAllItems()
             );
-            showToast("Filtered: England only");
+            showToast("Filtered: England");
         });
 
         // Sort by name (A-Z) (using lambda comparator)
         btnSortName = view.findViewById(R.id.player_btn_sort_name);
         btnSortName.setOnClickListener(v -> {
             List<Player> sortedPlayers = (List<Player>) playerRepository.sortByName();
+            updateAdapterItems(sortedPlayers);
             showToast("Sorted by Name (>A-Z)");
         });
 
@@ -156,7 +157,7 @@ public class PlayersFragment extends Fragment {
             List<Player> sortedPlayers = (List<Player>) playerRepository.sortByAge();
 
             updateAdapterItems(sortedPlayers);
-            showToast("Sorted by Age (Ascending)");
+            showToast("Sorted by Age (Descending)");
         });
 
         // Sort by team (A-Z) (using lambda comparator)
@@ -164,6 +165,7 @@ public class PlayersFragment extends Fragment {
         btnSortFounding.setOnClickListener(v -> {
             // Using stream with lambda comparator
             List<Player> sortedPlayers = (List<Player>) playerRepository.sortByTeam();
+            updateAdapterItems(sortedPlayers);
 
             updateAdapterItems(sortedPlayers);
             showToast("Sorted by Team (A-Z)");

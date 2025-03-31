@@ -3,6 +3,7 @@ package com.example.soccer.repository;
 import com.example.soccer.model.Match;
 
 import java.util.Comparator;
+import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -25,25 +26,33 @@ public class MatchRepository<Match> extends Repository{
         return super.filter(cityFilter);
     }
 
-    public Repository<Match> sortByCity(){
-        return (Repository<Match>) this.getAllItems().stream()
+    public List<Match> sortByCity(){
+        return (List<Match>) this.getAllItems().stream()
+                .filter(item -> (item instanceof com.example.soccer.model.Match))  // Ensure items are of type Match
+                .map(item -> (Match) item)  // Cast each item to Match
                 .sorted(Comparator.comparing(com.example.soccer.model.Match::getLocation))
                 .collect(Collectors.toList());
     }
 
-    public Repository<Match> sortByHomeTeam(){
-        return (Repository<Match>) this.getAllItems().stream()
+    public List<Match> sortByHomeTeam(){
+        return (List<Match>) this.getAllItems().stream()
+                .filter(item -> (item instanceof com.example.soccer.model.Match))  // Ensure items are of type Match
+                .map(item -> (Match) item)  // Cast each item to Match
                 .sorted(Comparator.comparing(com.example.soccer.model.Match::getHomeTeam))
                 .collect(Collectors.toList());
     }
-    public Repository<Match> sortByChampionship(){
-        return (Repository<Match>) this.getAllItems().stream()
+    public List<Match> sortByChampionship(){
+        return (List<Match>) this.getAllItems().stream()
+                .filter(item -> (item instanceof com.example.soccer.model.Match))  // Ensure items are of type Match
+                .map(item -> (Match) item)  // Cast each item to Match
                 .sorted(Comparator.comparing(com.example.soccer.model.Match::getChampionship))
                 .collect(Collectors.toList());
     }
 
-    public Repository<Match> sortByDate(){
-        return (Repository<Match>) this.getAllItems().stream()
+    public List<Match> sortByDate(){
+        return (List<Match>) this.getAllItems().stream()
+                .filter(item -> (item instanceof com.example.soccer.model.Match))  // Ensure items are of type Match
+                .map(item -> (Match) item)  // Cast each item to Match
                 .sorted(Comparator.comparing(com.example.soccer.model.Match::getDate))
                 .collect(Collectors.toList());
     }

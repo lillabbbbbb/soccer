@@ -145,6 +145,8 @@ public class MatchesFragment extends Fragment {
         btnSortChampionship = view.findViewById(R.id.match_btn_sort_championship);
         btnSortChampionship.setOnClickListener(v -> {
             List<Match> sortedMatchs = (List<Match>) matchRepository.sortByChampionship();
+
+            updateAdapterItems(sortedMatchs);
             showToast("Sorted by Name (>A-Z)");
         });
 
@@ -184,12 +186,15 @@ public class MatchesFragment extends Fragment {
         btnForeachIterator = view.findViewById(R.id.match_btn_foreach_iterator);
         btnForeachIterator.setOnClickListener(v -> {
             demonstrateForEachIterator();
+
+            showToast("Check log");
         });
 
         // Iterator demonstration - using custom iterator
         btnCustomIterator = view.findViewById(R.id.match_btn_custom_iterator);
         btnCustomIterator.setOnClickListener(v -> {
             demonstrateCustomIterator();
+            showToast("Check log");
         });
     }
 

@@ -1,6 +1,7 @@
 package com.example.soccer.repository;
 
 import java.util.Comparator;
+import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -27,20 +28,26 @@ public class PlayerRepository<Player> extends Repository{
         Predicate<com.example.soccer.model.Player> countryFilter = player -> player.getName().equals(country);
         return super.filter(countryFilter);
     }
-    public Repository<Player> sortByName(){
-        return (Repository<Player>) this.getAllItems().stream()
+    public List<Player> sortByName(){
+        return (List<Player>) this.getAllItems().stream()
+                .filter(item -> (item instanceof com.example.soccer.model.Player))  // Ensure items are of type Player
+                .map(item -> (Player) item)  // Cast each item to Player
                 .sorted(Comparator.comparing(com.example.soccer.model.Player::getName))
                 .collect(Collectors.toList());
     }
 
-    public Repository<Player> sortByTeam(){
-        return (Repository<Player>) this.getAllItems().stream()
+    public List<Player> sortByTeam(){
+        return (List<Player>) this.getAllItems().stream()
+                .filter(item -> (item instanceof com.example.soccer.model.Player))  // Ensure items are of type Player
+                .map(item -> (Player) item)  // Cast each item to Player
                 .sorted(Comparator.comparing(com.example.soccer.model.Player::getTeam))
                 .collect(Collectors.toList());
     }
 
-    public Repository<Player> sortByAge(){
-        return (Repository<Player>) this.getAllItems().stream()
+    public List<Player> sortByAge(){
+        return (List<Player>) this.getAllItems().stream()
+                .filter(item -> (item instanceof com.example.soccer.model.Player))  // Ensure items are of type Player
+                .map(item -> (Player) item)  // Cast each item to Player
                 .sorted(Comparator.comparingInt(com.example.soccer.model.Player::getAge))
                 .collect(Collectors.toList());
     }

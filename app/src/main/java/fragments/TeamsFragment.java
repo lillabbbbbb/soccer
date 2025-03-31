@@ -150,6 +150,10 @@ public class TeamsFragment extends Fragment {
         btnSortName = view.findViewById(R.id.team_btn_sort_name);
         btnSortName.setOnClickListener(v -> {
             List<Team> sortedTeams = (List<Team>) teamRepository.sortByName();
+
+            updateAdapterItems(
+                    sortedTeams
+            );
             showToast("Sorted by Name (>A-Z)");
         });
 

@@ -8,7 +8,7 @@ public class Match implements SoccerEntity{
     private String date;
     private String championship;
 
-    public Match(String homeTeam, String awayTeam, String score, String location, String championship, String date) {
+    public Match(String homeTeam, String awayTeam, String score, String championship, String date, String location) {
         this.homeTeam = homeTeam;
         this.awayTeam = awayTeam;
         this.score = score;
